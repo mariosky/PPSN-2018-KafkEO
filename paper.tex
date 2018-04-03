@@ -177,17 +177,18 @@ services, in fact {\em microservices} \cite{microservices}, which in
   %would be working on a single population, no scaling could be done,
   %since there would be a single pipeline.
 
-  There is usually no direct translation of most algorithms to this
-  architecture. This is specially true in evolutionary algorithms, who
-  rely on state, in the shape of a population, to perform their search
-  in the space of solutions.
+  %There is usually no direct translation of most algorithms to this
+  %architecture. This is specially true in evolutionary algorithms, who
+  %rely on state, in the shape of a population, to perform their search
+  %in the space of solutions.
   In this paper we want to introduce KafkEO, a serverless framework for
   evolutionary algorithms and other population-based systems. The main
   design objective is to leverage the scaling capabilities of a
   serverless framework, as well as create a system that can be deployed
   on different platforms by using free software. Our intention has
-  also been to create an algorithm that is functionally equivalent to an asynchronous
-  parallel, island-based, EA, which can use parallelism and at the same
+  also been to create an algorithm that is functionally equivalent to an
+  %% Pool Based ??
+   asynchronous, parallel, island-based, EA, which can use parallelism and at the same
   time reproduce mechanisms that are akin to migration. The island-based 
   paradigm is relatively standard in distributed EA applications, but in our case, 
   we have been using it since it allows for better parallelism
@@ -237,43 +238,38 @@ services, in fact {\em microservices} \cite{microservices}, which in
   algorithms on transputers \cite{voigt1990modelling}, the world wide
   % transputers, had to google that
   % you're too young, man - JJ
-  web \cite{chong:1999:jDGPi} or the first generation of cloud
+  web \cite{chong:1999:jDGPi} and the first generation of cloud
   services
-  \cite{DBLP:journals/corr/abs-1105-6205,de2017parallel,salza2017ccube}. Evolutionary
-  algorithms are population-based algorithms, so it is relatively easy
-  to create a parallel implementation by just splitting populations, as
-  long as there is a way for those populations to interchange some
-  individuals and leverage the use of many different machines. In
-  general, besides, one of the most time-consuming steps in an
-  evolutionary algorithm is evaluation, so as long as you can compute
-  fitness in parallel, you can obtain a certain amount of speed up.
-
-  However, in general every new computing platform has its own view of
-  how computing should be made, and in many cases that has made
-  evolutionary algorithms move in new directions in order to make them
-  work better in that platform while keeping the spirit of
-  bioinspiration. For instance, most evolutionary algorithms work in a
+  \cite{DBLP:journals/corr/abs-1105-6205,de2017parallel,salza2017ccube}. %Evolutionary
+  %algorithms are population-based algorithms, so it is relatively easy
+  %to create a parallel implementation by just splitting populations, as
+  %long as there is a way for those populations to interchange some
+  %individuals and leverage the use of many different machines. In
+  %general, besides, one of the most time-consuming steps in an
+  %evolutionary algorithm is evaluation, so as long as you can compute
+  %fitness in parallel, you can obtain a certain amount of speed up.
+  However, every new computing platform has its own view of computing, and in many cases that has made evolutionary algorithms move in new directions in order to make them work better in that platform while keeping the spirit of
+  bio-inspiration. For instance, most evolutionary algorithms work in a
   synchronous way; although there were very early efforts to create
   asynchronous EAs \cite{coleman89}, in general
-  generations proceed one after the other and migration happening in
+  generations proceed one after the other and migration happens in
   all islands at the same time. However, this mode of working does not
   fit well with architectures that are heterogeneous and dynamic, which
   is why there have been many efforts from early
   on to adapt EAs to this kind of substrate
-  \cite{Jini:FEA2000,zorman2002creation,baugh2003asynchronous}. This
-  last one creates an asynchronous, parallel system that is {\em functionally
-    equivalent} to a sequential one by {\em unrolling} operations so
-  that they happen in parallel as long as there is no dependence between
-  them; multiple generations occur at the same time with every operation
-  using data that is available at every particular
-  moment. \cite{Jini:FEA2000} and \cite{zorman2002creation} explicitly
-  follow two completely different, and opposed, approaches to the
-  adaptation of an EA to a heterogeneous substrate. While the former
-  tends towards finer grain by distributing every particular operation
-  to different Jini services, the latter uses a pool-based approach to
-  create island-like structures, creating again a system that, even
-  leveraging the capabilities of the architecture in a much better way,
-  does not advance the  structure of an EA in any new way.
+  \cite{Jini:FEA2000,zorman2002creation,baugh2003asynchronous}.
+  %This last one creates an asynchronous, parallel system that is {\em functionally equivalent} to a sequential one by {\em unrolling} operations so
+  %that they happen in parallel as long as there is no dependence between
+  %them; multiple generations occur at the same time with every operation
+  %using data that is available at every particular moment.
+  %\cite{Jini:FEA2000} and \cite{zorman2002creation} explicitly
+  %follow two completely different, and opposed, approaches to the
+  %adaptation of an EA to a heterogeneous substrate. While the former
+  %tends towards finer grain by distributing every particular operation
+  %to different Jini services, the latter uses a pool-based approach to
+  %create island-like structures, creating again a system that, even
+  %leveraging the capabilities of the architecture in a much better way,
+  %does not advance the  structure of an EA in any new way.
 
   This kind of internet-native applications later on transitioned to
   using Service-Oriented Architectures (SoA) \cite{Papazoglou2007}. While monolithic, that is,
@@ -286,22 +282,27 @@ services, in fact {\em microservices} \cite{microservices}, which in
   this kind of architectures decline in popularity
   \cite{Varghese2018849}.
 
-  In general, frameworks based in SoA tried to achieve functional equivalence with parallel
+  In general, frameworks based in SoA also tried to achieve functional equivalence with parallel
   or sequential versions of EAs. There is the same tension between
   functional equivalence and new
   design in new, cloud based approaches to evolutionary
-  algorithms. Salza and collaborators \cite{salza2017ccube,de2017parallel} explicitly
+  algorithms. 
+  %TODO: The previous should be improved, is very important. 
+  Salza and collaborators \cite{salza2017ccube,de2017parallel} explicitly
   and looking to optimize interoperability claim that there is very
   little need to change ``traditional'' code to port it to the cloud,
-  implicitly claiming this {\em functional equivalence} with the
-  sequential evolutionary algorithms. Other contemporary systems such as
-  \cite{10.1007/978-3-319-32149-3_46} use Spark to evaluate, in
-  parallel, fitness for different machine learning models;
-  Vianna de Oliveira and Coelho \cite{de2015scalable} use Hadoop for evolutionary k-means clustering,
-  obtaining good speedups; in this last case, it uses a problem-specific
-  way of distributing tasks, without resourcing to a change of the
-  evolutionary algorithm itself.
+  implicitly claiming this {\em functional equivalence} with
+  sequential evolutionary algorithms.
+  % Not that important or related? - Mario
+  %Other contemporary systems such as
+  %\cite{10.1007/978-3-319-32149-3_46} use Spark to evaluate, in
+  %parallel, fitness for different machine learning models;
+  %Vianna de Oliveira and Coelho \cite{de2015scalable} use Hadoop for evolutionary k-means clustering,
+  %obtaining good speedups; in this last case, it uses a problem-specific
+  %way of distributing tasks, without resourcing to a change of the
+  %evolutionary algorithm itself.
 
+  % Yes! we got to the chase 
   Besides these implementations using well known cloud services, there are new computation models for evolutionary algorithms
   that are not functionally equivalent to a canonical EA, but have
   proved to work well in these new environments. Pool based EAs,
@@ -312,11 +313,10 @@ services, in fact {\em microservices} \cite{microservices}, which in
   able to accommodate all kinds of ephemeral and heterogeneous
   resources.
 
-  In the serverless, event based types of architectures we are going to
+  In the serverless, event-based architectures we are going to
   be targeting in this paper, there has been so far no work that we know
   of. Similar setups including microservices have been employed by Salza et
-  al. \cite{salza2017ccube}; however, the serverless system adds a layer
-  of abstraction to event-based queuing systems such as the one employed
+  al. \cite{salza2017ccube}; however, the proposed serverless system adds a layer of abstraction to event-based queuing systems such as the one employed
   by Salza by reducing it to functions, messages and rules or
   triggers. We will explain in detail these architectures in the next
   section.
