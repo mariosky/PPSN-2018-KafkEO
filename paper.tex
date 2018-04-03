@@ -331,7 +331,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   \label{fig:kafkeo}
   \end{figure*}
   %
-  \section{Event based architectures and implementing evolutionary
+  \section{Event-based architectures and implementing evolutionary
     algorithms over them}
   \label{sec:methods}
   %
@@ -341,34 +341,31 @@ services, in fact {\em microservices} \cite{microservices}, which in
     topics and the functions that are being used.}
   \label{fig:kafkeo2}
   \end{figure*}
-  %
-  The creation of virtualization and isolation mechanisms at many
-  different levels and the consequent granularization of architectures
-  has led to systems that are asynchronous and loosely coupled in what
-  is generally called a microservice architecture. These microservice
-  architectures share the common trait of consisting of several services
-  with a single concern, that is, providing a single processing value,
+  % Talked about this earlier: - M
+  %The creation of virtualization and isolation mechanisms at many
+  %different levels and the consequent granularization of architectures
+  %has led to systems that are asynchronous and loosely coupled in what
+  %is generally called a microservice architecture. 
+  
+  %These microservice
+  Microservice architectures share the common trait of consisting of several services with a single concern, that is, providing a single processing value,
   in many cases stateless, and coupled using lightweight protocols such
   as REST and messaging buses that carry information from every service
   to the next. In this case, we are going to be using IBM's BlueMix
   service, which includes OpenWhisk as a serverless framework and
-  MessageHub, also a vendor implementation of the Kafka messaging
-  service; this last one gives name to our framework, called KafkEO (EO
-  stands for Evolving Objects) and introduced in this paper.
+  MessageHub, a vendor implementation of the Kafka messaging
+  service; this last one gives name to the framework we are presenting, called KafkEO (EO stands for Evolving Objects).
 
-  The main reason why we have made this choice is availability of
-  resources, but also
-  the fact that all parts of the implementation are open source and can
-  be deployed in desktop machines or other cloud providers by changing
-  the configuration, as long as it is implemented using the same tools. It is also a good practice to implement free
+  The main reason for choosing OpenWhisk and Kafka is availability of
+  resources, but also the fact that all parts of the implementation are open source and can be deployed in desktop machines or other cloud providers by changing the configuration. It is also a good practice to implement free
   software using free software, making it widely available to the
-  scientific community to create their own versions or to adapt it to
-  their own problems.
+  scientific community.
+  % to create their own versions or to adapt it to their own problems.
 
   The layers and message flow in the application are shown in Figure
   \ref{fig:kafkeo}, which also includes the evolutionary components. We
   will focus for the time being in the general picture: a serverless
-  architecture using  a messaging service as a backbone, which in this case
+  architecture using a messaging service as a backbone, which in this case
   takes the shape of Kafka/MessageHub. These messages are produced and
   consumed by a service, which can also store them in an external database
   for their later use; in general, messaging systems are configured to
