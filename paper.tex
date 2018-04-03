@@ -374,12 +374,13 @@ services, in fact {\em microservices} \cite{microservices}, which in
   points 1 through 5 of Figure \ref{fig:kafkeo2}. The beginning of the
   evolution is triggered from outside the serverless framework (1) by
   creating a series of Population objects, which we pack (2) to a message in the
-  {\sf new-populations} {\em topic}. The arrival of a new population
+  {\sf new-populations} {\em topic}. Population objects are the equivalent to islands or samples in EvoSpace. If Population object is a self-contained population of individuals, represented as a JSON structure. 
+    
+  The arrival of a new population
   package sets off the {\sf MessageArrived} trigger (3), that is bound to
-  the actions that effectively perform evolution. In this case we
-  feature GA and PSO algorithms, although only GA has been implemented 
-  for this paper. Any number of actions can be triggered in parallel by the same message,
-  and new actions can be triggered while others are still working; this phase is
+  the actions that effectively perform a small number of generations. In this case we give as an example a GA and a PSO algorithms, 
+  although only the GA has been implemented 
+  for this paper. Any number of GA algorithms ({\em actions}) can be triggered in parallel by the same message, and new actions can be triggered while others are still working; this phase is
   then self-scaling and parallel by design.
 
   Population objects are extracted from the message and, for each, a call to
@@ -395,9 +396,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   can be achieved or simply generating the files used by the BBOB Post-processing scripts.
 
   This queue is polled by a service outside the serverless framework, called
-  {\sf Population-Controller}. This service needs to be stateful, since
-  it needs to wait until several populations are ready to then mix them (in
-  step \#9 in Figure \ref{fig:kafkeo2}) to produce a new population, that is the result of selection
+  {\sf Population-Controller}. This service needs to be stateful, since it implements a buffer that needs to wait until several populations are ready to then mix them (in step \#9 in Figure \ref{fig:kafkeo2}) to produce a new population, that is the result of selection
   and crossover between several populations coming from the {\sf
     evolved-population-objects} message queue. Eventually, these mixed
   populations are returned to the initial queue to return to the {\em
@@ -409,7 +408,6 @@ services, in fact {\em microservices} \cite{microservices}, which in
     the asynchronous nature of the system, several messages could still
     arrived after the current experiment is over. The controller must only
     accept messages belonging to the current process.
-
   % consists essentially on a single function, a single topic
   % in the MessageHub and a single kind of message, which includes a whole
   % population along with metadata. The function performs a series of
@@ -420,12 +418,14 @@ services, in fact {\em microservices} \cite{microservices}, which in
   % sends the whole evolved population as a message to the MessageHub, to
   % be propagated to the other instantiations on the function.
 
-  This would be functionally equivalent to a sequential algorithm except
-  for the fact that, between two calls to the {\sf get-new-populations}
-  function, several
-  population-messages have been received in the message queue. In fact,
-  every call the {\sf Crossover-migrate} function receives several populations, which
-  have to be merged to generate several new populations. This {\em merging} step
+  %This would be functionally equivalent to a sequential algorithm except
+  %for the fact that, between two calls to the {\sf get-new-populations}
+  %function, several
+  %population-messages have been received in the message queue. In fact,
+  %every call the {\sf Crossover-migrate} function receives several
+  %populations, which
+  %have to be merged to generate several new populations. 
+  This {\em merging} step
   before starting evolution takes the place of the {\em migration} phase
   and allows this type of framework to work in parallel, since several
   instances of the function might be working at the exact same time; the
