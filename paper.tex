@@ -96,44 +96,37 @@ Cloud computing is increasingly becoming the dominant way of running
 the server side of most enterprise applications nowadays, the same as the browser is
 the standard platform for the client side. Besides the convenience of the pay-as-you-go
 model, it also offers a way of describing the infrastructure as part
-of the code, so that it is much easier to reproduce results.
-The availability of resources only limited by your budget, and in many
-cases for free, as well as the inherent reproducibility of cloud
-deployments, has been a boon for scientific computing. However,
+of the code, so that it is much easier to reproduce results and has 
+been a boon for scientific computing.
+%The availability of resources only limited by your budget, and in many
+%cases for free, as well as the inherent reproducibility of cloud
+%deployments, has been a boon for scientific computing. 
+However,
 programming the cloud means that monolithic applications, that is,
 applications built on a single stack of services that communicate by
-layers, are no longer the best or most efficient architectural design
-for scientific workflows and implementation of algorithms. Cloud
+layers, are no longer an efficient architectural design for scientific workflows. Cloud
 architectures favor asynchronous communication over heterogeneous %favor: american
-resources, and shifting from a monolithic n-tier and mostly sequential
+resources, and shifting from mostly sequential and monolithic 
 to an asynchronously parallel architecture will also imply important
-reformulation in the algorithms to take full advantage of this new
-mode.
+reformulation of the algorithms in order to take full advantage of these technologies.
 
   Cloud native applications add a layer of abstraction to the
   underlying distributed computing system, seamlessly integrating
-  different elements in a single data flow that is managed by the
-  cloud provider, allowing the user to focus on code and connections
-  among different services. Describing them as {\em native} points
-  to their new architecture, which departs from a monolithic or even
-  distributed paradigm to become a loosely connected collection of
+  different elements in a single data flow, allowing the user to just focus on code and service connections. Services are {\em native} points
+  in this new architecture, departing from a monolithic or even
+  distributed paradigm to become a loosely collection of
 services, in fact {\em microservices} \cite{microservices}, which in
  many cases are stateless, reacting to some event and
-  {\em living} only while they are doing some kind of processing and
-  not keeping state from one invocation to the next.
-  
-  Reactive systems not only allow massive scaling and independent deployment they
-  are also more economical than other monolithic options.  Platform as a service
-  (PaaS) or even Container as a Service (CaaS) approaches need to be running all
+  {\em living} only while they are doing some kind of processing.
+%   and not keeping state from one invocation to the next.
+% redundant - Mario  
+  Reactive systems not only allow massive scaling and independent deployment they are also more economical than other monolithic options.  Platform as a service (PaaS) or even Container as a Service (CaaS) approaches need to be running all
   the time in order to maintain their state, so they are paid for their size and
-  and also for time they remain active.
+  time they remain active.
 
-  At any rate, while one of the main selling points of Functions as a Service is
-  their ultra-fast activation time, from our point of view their most interesting
-  feature is the fact that they provide stateless processing. An important caveat
+  At any rate, while one of the main selling points of Functions as a Service (FaaS) is their ultra-fast activation time, from our point of view their most interesting feature is the fact that they provide stateless processing. An important caveat
   of stateless processing is that algorithms must be adapted to this fact and
-  turned, at least in part, into a series of stateless steps that work on a data
-  stream.
+  turned, at least in part, into a series of stateless steps thaworking on a data stream.
 
 
     It is also taken to an atomic extreme
@@ -141,26 +134,31 @@ services, in fact {\em microservices} \cite{microservices}, which in
     which allow vendors and users to deploy code as single, stateless
     functions, that get activated via {\em rules}, {\em triggers} or
     explicitly, reacting to events consumed from
-    a message queue or bus that
+    a message queue.
+    %or bus that
     % generally reacting to events from a message queue or bus that
     % what is generated? rules are triggered and triggers fire in
     % response to events
     % Please change it to whatever you think it's the best - JJ
-    is the backbone of the application. The first commercial
+    %is the backbone of the application. 
+    The first commercial
     implementation of this kind of architecture was released by Amazon
-    with its Lambda product, to be followed closely by releases by Azure
-    (Microsoft) and Google and an open source implementation, OpenWhisk,
+    with its Lambda product, to be closely followed by releases by Azure
+    (Microsoft) and Google and OpenWhisk, an open source implementation
     released by IBM \cite{Baldini2016287}.
 
   These architectures are {\em event-based} in the sense that program
-  flow is governed by events, which in this case are going to be simply
-  messages received by the MessageHub service. These {\em events} trigger actions,
-  and actions create new message/events which start the loop all over
-  again. This is not the only mode of action in general serverless
-  architectures; however, since they define a temporal axis and make new
-  actions depend on the result of other actions, is the one that we are
-  going to choose in this paper to implement a stateless version of an
-  evolutionary algorithm.
+  flow is governed by events.
+  %, which in this case are going to be simply
+  %messages received by the MessageHub service.
+  %These {\em events} trigger actions,
+  %and actions create new message/events which start the loop all over
+  %again. This is not the only mode of action in general serverless
+  %architectures; however, since they define a temporal axis and make new
+  %actions depend on the result of other actions, is the one that we are
+  %going to choose in this paper to implement a stateless version of an
+  %evolutionary algorithm.
+
 
   There is usually no direct translation of most algorithms to this
   architecture. This is specially true in evolutionary algorithms, who
