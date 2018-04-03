@@ -109,7 +109,6 @@ architectures favor asynchronous communication over heterogeneous %favor: americ
 resources, and shifting from mostly sequential and monolithic 
 to an asynchronously parallel architecture will also imply important
 reformulation of the algorithms in order to take full advantage of these technologies.
-
   Cloud native applications add a layer of abstraction to the
   underlying distributed computing system, seamlessly integrating
   different elements in a single data flow, allowing the user to just focus on code and service connections. Services are {\em native} points
@@ -123,12 +122,9 @@ services, in fact {\em microservices} \cite{microservices}, which in
   Reactive systems not only allow massive scaling and independent deployment they are also more economical than other monolithic options.  Platform as a service (PaaS) or even Container as a Service (CaaS) approaches need to be running all
   the time in order to maintain their state, so they are paid for their size and
   time they remain active.
-
   At any rate, while one of the main selling points of Functions as a Service (FaaS) is their ultra-fast activation time, from our point of view their most interesting feature is the fact that they provide stateless processing. An important caveat
   of stateless processing is that algorithms must be adapted to this fact and
   turned, at least in part, into a series of stateless steps thaworking on a data stream.
-
-
     It is also taken to an atomic extreme
     with the so-called serverless architectures \cite{Varghese2018849},
     which allow vendors and users to deploy code as single, stateless
@@ -147,8 +143,8 @@ services, in fact {\em microservices} \cite{microservices}, which in
     (Microsoft) and Google and OpenWhisk, an open source implementation
     released by IBM \cite{Baldini2016287}.
 
-  These architectures are {\em event-based} in the sense that program
-  flow is governed by events.
+  %These architectures are {\em event-based} in the sense that program
+  %flow is governed by events.
   %, which in this case are going to be simply
   %messages received by the MessageHub service.
   %These {\em events} trigger actions,
@@ -160,26 +156,31 @@ services, in fact {\em microservices} \cite{microservices}, which in
   %evolutionary algorithm.
 
 
+  %There is usually no direct translation of most algorithms to this
+  %architecture. This is specially true in evolutionary algorithms, who
+  %rely on state, in the shape of a population, to perform their search
+  %in the space of solutions. 
+  %It is relatively straightforward to convert
+  %an evolutionary algorithm to a stateless version by simply making a
+  %{\sf generation} function $g$ that takes a population as a function
+  %and returns another population. A simple serverless GA would then be
+  %triggered by the creation of a initial population, and would perform
+  %one or several generations in a function, returning the result to the
+  %message hub and thus triggering a new action. This would be
+  %functionally equivalent to a traditional, serial evolutionary
+  %algorithm, and might be cheaper than a XaaS (where X can be P as in
+  %platform, I as in infrastructure, C as in container or even DB, since
+  %whole systems can be implemented using a database engine as a server framework) 
+  %implementation since it
+  %would eschew some overhead. However, it would also incur in some
+  %overhead by reading and writing to the message queue and, since it
+  %would be working on a single population, no scaling could be done,
+  %since there would be a single pipeline.
+
   There is usually no direct translation of most algorithms to this
   architecture. This is specially true in evolutionary algorithms, who
   rely on state, in the shape of a population, to perform their search
-  in the space of solutions. It is relatively straightforward to convert
-  an evolutionary algorithm to a stateless version by simply making a
-  {\sf generation} function $g$ that takes a population as a function
-  and returns another population. A simple serverless GA would then be
-  triggered by the creation of a initial population, and would perform
-  one or several generations in a function, returning the result to the
-  message hub and thus triggering a new action. This would be
-  functionally equivalent to a traditional, serial evolutionary
-  algorithm, and might be cheaper than a XaaS (where X can be P as in
-  platform, I as in infrastructure, C as in container or even DB, since
-  whole systems can be implemented using a database engine as a server framework) 
-  implementation since it
-  would eschew some overhead. However, it would also incur in some
-  overhead by reading and writing to the message queue and, since it
-  would be working on a single population, no scaling could be done,
-  since there would be a single pipeline.
-
+  in the space of solutions.
   In this paper we want to introduce KafkEO, a serverless framework for
   evolutionary algorithms and other population-based systems. The main
   design objective is to leverage the scaling capabilities of a
@@ -199,6 +200,11 @@ services, in fact {\em microservices} \cite{microservices}, which in
   % Please add something and I'll review it. - JJ
   % OK, TO DO - M
   % And I have done it now... - JJ
+  
+  %% TODO: 
+  %% Explain a little more BBOB the benchmarks
+  %% - Mario
+  
   We will examine the results of this framework on some BBOB benchmarks,
   taking into account
   %speed as well as
@@ -210,22 +216,8 @@ services, in fact {\em microservices} \cite{microservices}, which in
   The
   implementation is also free software and can be downloaded from
   GitHub.
+  %% TODO: Add link? 
 
-
-  % \begin{table}
-  %   \caption{Frequency of Special Characters}
-  %   \label{tab:freq}
-  %   \begin{tabular}{ccl}
-  %     \toprule
-  %     Non-English or Math&Frequency&Comments\\
-  %     \midrule
-  %     \O & 1 in 1,000& For Swedish names\\
-  %     $\pi$ & 1 in 5& Common in math\\
-  %     \$ & 4 in 5 & Used in business\\
-  %     $\Psi^2_1$ & 1 in 40,000& Unexplained usage\\
-  %   \bottomrule
-  % \end{tabular}
-  % \end{table}
 
   The rest of the paper is organized as follows. Next we present the
   state of the art in cloud implementation of evolutionary algorithms,
