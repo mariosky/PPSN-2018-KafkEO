@@ -124,7 +124,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   time they remain active.
   At any rate, while one of the main selling points of Functions as a Service (FaaS) is their ultra-fast activation time, from our point of view their most interesting feature is the fact that they provide stateless processing. An important caveat
   of stateless processing is that algorithms must be adapted to this fact and
-  turned, at least in part, into a series of stateless steps thaworking on a data stream.
+  turned, at least in part, into a series of stateless steps working on a data stream.
     It is also taken to an atomic extreme
     with the so-called serverless architectures \cite{Varghese2018849},
     which allow vendors and users to deploy code as single, stateless
@@ -465,7 +465,11 @@ services, in fact {\em microservices} \cite{microservices}, which in
   In this section we compare the performance of KafkEO against an implementation of
   the EvoSpace \cite{GValdez2015} pool-based architecture, using the first five
   functions of the Noiseless BBOB testbed \cite{hansen2016coco}, 
-  which are real-parameter, single-objective, separable functions, namely: Sphere,,  ellipsoidal, which is highly multimodal,  Rastrigin,  Buche-Rastrigin,  and the purely lineal function called linear  slope. It is expected that the two algorithms achieve similar results as
+  which are real-parameter, single-objective, separable functions,
+  namely: Sphere,  ellipsoidal, which is highly multimodal,
+  Rastrigin,  Buche-Rastrigin,  and the purely lineal function called
+  linear  slope. It is expected that the two algorithms achieve
+  similar results as 
   they are functionally equivalent. The EvoSpace implementation follows the
   basic EvoSpace model in which EvoWorkers asynchronously interact with the
   population pool by taking samples of the population to perform a standard
@@ -557,7 +561,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   Python \cite{fortin2012deap},
 %  The parameters for the evolutionary algorithm were fixed and
 %  are shown in Table \ref{tab:GAparams}.
-  using 12 for tournament size, a gaussian mutation sith sigma = 0.05 and a probability between 0.1 and 0.6, plus two point crossover with probability between 0.8 and 1; these are the default parameters.  
+  using 12 for tournament size, a Gaussian mutation with sigma = 0.05 and a probability between 0.1 and 0.6, plus two point crossover with probability between 0.8 and 1; these are the default parameters.  
   % These parameters have been
   % chosen as the usual, and default, setup in any experiment, without
   % making any attempt to adapt it to this particular flavor of the
