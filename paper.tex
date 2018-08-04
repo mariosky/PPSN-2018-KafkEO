@@ -38,13 +38,13 @@
 \begin{document}
 \sloppy
 
-\title{A modern, event-based architecture for distributed evolutionary algorithms}
-\titlerunning{A modern, event-based architecture for distributed EAs}
+\title{Introducing an event-based architecture for concurrent and distributed evolutionary algorithms}
+\titlerunning{Introducing an event-based architecture for concurrent and distributed evolutionary algorithm}
 
 \author{Juan J. Merelo Guerv\'os\inst{1} \and J. Mario Garc\'ia-Valdez\inst{2}}
 
 %
-\authorrunning{Garc\'ia-Valdez, Merelo Guerv\'os}
+\authorrunning{Merelo Guerv\'os, Garc\'ia-Valdez}
 
 %
 %%%% list of authors for the TOC (use if author list has to be modified)
@@ -63,15 +63,15 @@ Instituto Tecnol\'ogico de Tijuana, Tijuana BC, Mexico;
 
 \begin{abstract}
 
-Cloud native applications add a layer of abstraction to the
+Cloud-native applications add a layer of abstraction to the
 underlying distributed computing system, defining a high-level,
 self-scaling and self-managed architecture of different microservices
 linked by a messaging bus. Creating new algorithms that tap these
 architectural patterns and at the same time employ distributed
 resources efficiently is a challenge we will be taking up in this
-paper. We introduce KafkEO, a cloud native evolutionary algorithms
-framework that is prepared to work with different implementations of evolutionary
-algorithms and other population-based metaheuristics by using
+paper. We introduce KafkEO, a cloud-native evolutionary algorithms
+framework that is prepared to work with different implementations of
+evolutionary algorithms and other population-based metaheuristics by using
 micro-populations and stateless services as the main building
 blocks; KafkEO is an attempt to map the traditional evolutionary
 algorithm to this new cloud-native format. As far as we know, this is the first
@@ -79,9 +79,9 @@ architecture of this kind that has been published and tested, and is free
 software and vendor-independent, based on OpenWhisk and Kafka. 
 This paper presents a proof of concept, examines its cost, and tests 
 the impact on the algorithm of the design around
-cloud native and asynchronous system by comparing it on
+cloud-native and asynchronous system by comparing it on
 the well known BBOB benchmarks with other pool-based architectures,
-with which it has remarkable functional resemblance. KafkEO results are 
+with which it has a remarkable functional resemblance. KafkEO results are 
 quite competitive with similar architectures.
 
 
@@ -109,7 +109,7 @@ architectures favor asynchronous communication over heterogeneous %favor: americ
 resources, and shifting from mostly sequential and monolithic 
 to an asynchronously parallel architecture will also imply important
 reformulation of the algorithms in order to take full advantage of these technologies.
-  Cloud native applications add a layer of abstraction to the
+  Cloud-native applications add a layer of abstraction to the
   underlying distributed computing system, seamlessly integrating
   different elements in a single data flow, allowing the user to just focus on code and service connections. Services are {\em native} points
   in this new architecture, departing from a monolithic or even
@@ -124,7 +124,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   time they remain active.
   At any rate, while one of the main selling points of Functions as a Service (FaaS) is their ultra-fast activation time, from our point of view their most interesting feature is the fact that they provide stateless processing. An important caveat
   of stateless processing is that algorithms must be adapted to this fact and
-  turned, at least in part, into a series of stateless steps thaworking on a data stream.
+  turned, at least in part, into a series of stateless steps working on a data stream.
     It is also taken to an atomic extreme
     with the so-called serverless architectures \cite{Varghese2018849},
     which allow vendors and users to deploy code as single, stateless
@@ -195,31 +195,15 @@ services, in fact {\em microservices} \cite{microservices}, which in
   and thus performance, at the same time it makes keeping diversity
   easier while needing fewer parameters to tune.
 
-  %%% Maybe a little more about the why Island?
-  %%% Not only better performance in time, but also, more diverstity and less
-  %%% parametrization
-  % Please add something and I'll review it. - JJ
-  % OK, TO DO - M
-  % And I have done it now... - JJ
-  
-  %% TODO: 
-  %% Explain a little more BBOB the benchmarks
-  %% - Mario
-  
-  We will examine the results of this framework on some BBOB benchmarks,
-  taking into account
-  %speed as well as
-  the number of evaluations, comparing it
-  against another Cloud ready parallel pool based implementation (with
-  containers).
+  We will examine the results of this framework using the first five
+  functions of the Noiseless Black-Box-Optimization-Benchmarking (BBOB) testbed \cite{hansen2016coco} part of the COCO (COmparing Continuous Optimisers) platform for comparisons of real-parameter global optimisers \cite{hansen2016coco}. The framework is compared
+  against another cloud-ready parallel pool based implementation.
   %The speed measurements are intended mainly as baseline,
   %since no effort has been made to optimize it.
   The
   implementation is also free software and can be downloaded from
   GitHub.
   %% TODO: Add link? 
-
-
   The rest of the paper is organized as follows. Next we present the
   state of the art in cloud implementation of evolutionary algorithms,
   to be followed in section \ref{sec:methods} by an introduction to the
@@ -229,8 +213,8 @@ services, in fact {\em microservices} \cite{microservices}, which in
   in section \ref{sec:con} will discuss the results, present conclusions
   and future lines of work.
 
-  \section{State of the art}
 
+  \section{State of the art}
   In general, scientific computing has followed the trends of the
   computing industry, with new implementations published almost as soon
   as new technologies became commercially available, or even
@@ -367,7 +351,8 @@ services, in fact {\em microservices} \cite{microservices}, which in
   \ref{fig:kafkeo}, which also includes the evolutionary components. We
   will focus for the time being in the general picture: a serverless
   architecture using a messaging service as a backbone, which in this case
-  takes the shape of Kafka/MessageHub. These messages are produced and
+  takes the shape of the Kafka/MessageHub service. 
+  These messages are produced and
   consumed by a service, which can also store them in an external database
   for their later use; in general, messaging systems are configured to
   keep messages only for a certain amount of time, and they disappear
@@ -389,12 +374,13 @@ services, in fact {\em microservices} \cite{microservices}, which in
   points 1 through 5 of Figure \ref{fig:kafkeo2}. The beginning of the
   evolution is triggered from outside the serverless framework (1) by
   creating a series of Population objects, which we pack (2) to a message in the
-  {\sf new-populations} {\em topic}. The arrival of a new population
+  {\sf new-populations} {\em topic}. Population objects are the equivalent to islands or samples in EvoSpace. If Population object is a self-contained population of individuals, represented as a JSON structure. 
+    
+  The arrival of a new population
   package sets off the {\sf MessageArrived} trigger (3), that is bound to
-  the actions that effectively perform evolution. In this case we
-  feature GA and PSO algorithms, although only GA has been implemented 
-  for this paper. Any number of actions can be triggered in parallel by the same message,
-  and new actions can be triggered while others are still working; this phase is
+  the actions that effectively perform a small number of generations. In this case we give as an example a GA and a PSO algorithms, 
+  although only the GA has been implemented 
+  for this paper. Any number of GA algorithms ({\em actions}) can be triggered in parallel by the same message, and new actions can be triggered while others are still working; this phase is
   then self-scaling and parallel by design.
 
   Population objects are extracted from the message and, for each, a call to
@@ -410,9 +396,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   can be achieved or simply generating the files used by the BBOB Post-processing scripts.
 
   This queue is polled by a service outside the serverless framework, called
-  {\sf Population-Controller}. This service needs to be stateful, since
-  it needs to wait until several populations are ready to then mix them (in
-  step \#9 in Figure \ref{fig:kafkeo2}) to produce a new population, that is the result of selection
+  {\sf Population-Controller}. This service needs to be stateful, since it implements a buffer that needs to wait until several populations are ready to then mix them (in step \#9 in Figure \ref{fig:kafkeo2}) to produce a new population, that is the result of selection
   and crossover between several populations coming from the {\sf
     evolved-population-objects} message queue. Eventually, these mixed
   populations are returned to the initial queue to return to the {\em
@@ -424,7 +408,6 @@ services, in fact {\em microservices} \cite{microservices}, which in
     the asynchronous nature of the system, several messages could still
     arrived after the current experiment is over. The controller must only
     accept messages belonging to the current process.
-
   % consists essentially on a single function, a single topic
   % in the MessageHub and a single kind of message, which includes a whole
   % population along with metadata. The function performs a series of
@@ -435,12 +418,14 @@ services, in fact {\em microservices} \cite{microservices}, which in
   % sends the whole evolved population as a message to the MessageHub, to
   % be propagated to the other instantiations on the function.
 
-  This would be functionally equivalent to a sequential algorithm except
-  for the fact that, between two calls to the {\sf get-new-populations}
-  function, several
-  population-messages have been received in the message queue. In fact,
-  every call the {\sf Crossover-migrate} function receives several populations, which
-  have to be merged to generate several new populations. This {\em merging} step
+  %This would be functionally equivalent to a sequential algorithm except
+  %for the fact that, between two calls to the {\sf get-new-populations}
+  %function, several
+  %population-messages have been received in the message queue. In fact,
+  %every call the {\sf Crossover-migrate} function receives several
+  %populations, which
+  %have to be merged to generate several new populations. 
+  This {\em merging} step
   before starting evolution takes the place of the {\em migration} phase
   and allows this type of framework to work in parallel, since several
   instances of the function might be working at the exact same time; the
@@ -480,7 +465,11 @@ services, in fact {\em microservices} \cite{microservices}, which in
   In this section we compare the performance of KafkEO against an implementation of
   the EvoSpace \cite{GValdez2015} pool-based architecture, using the first five
   functions of the Noiseless BBOB testbed \cite{hansen2016coco}, 
-  which are real-parameter, single-objective, separable functions, namely: Sphere,,  ellipsoidal, which is highly multimodal,  Rastrigin,  Buche-Rastrigin,  and the purely lineal function called linear  slope. It is expected that the two algorithms achieve similar results as
+  which are real-parameter, single-objective, separable functions,
+  namely: Sphere,  ellipsoidal, which is highly multimodal,
+  Rastrigin,  Buche-Rastrigin,  and the purely lineal function called
+  linear  slope. It is expected that the two algorithms achieve
+  similar results as 
   they are functionally equivalent. The EvoSpace implementation follows the
   basic EvoSpace model in which EvoWorkers asynchronously interact with the
   population pool by taking samples of the population to perform a standard
@@ -572,7 +561,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   Python \cite{fortin2012deap},
 %  The parameters for the evolutionary algorithm were fixed and
 %  are shown in Table \ref{tab:GAparams}.
-  using 12 for tournament size, a gaussian mutation sith sigma = 0.05 and a probability between 0.1 and 0.6, plus two point crossover with probability between 0.8 and 1; these are the default parameters.  
+  using 12 for tournament size, a Gaussian mutation with sigma = 0.05 and a probability between 0.1 and 0.6, plus two point crossover with probability between 0.8 and 1; these are the default parameters.  
   % These parameters have been
   % chosen as the usual, and default, setup in any experiment, without
   % making any attempt to adapt it to this particular flavor of the
@@ -596,7 +585,7 @@ services, in fact {\em microservices} \cite{microservices}, which in
   % Crossover Probability& [.8,1]  \\ \hline
   % I didn't know that... Maybe we should have left it fixed - JJ
 
-  The experiments using the above described framework were performed
+  The experiments were performed
   during the month of January using a paid IBM BlueMix subscription. The
   totality of experiments costed about \$12. Most of the cost is due to
   the MessageHub {\em partitions}, that is, the hosted messaging service
@@ -613,24 +602,6 @@ services, in fact {\em microservices} \cite{microservices}, which in
   number of messages that can be borne by a particular partition, and
   try to minimize the number of partitions to avoid scaling costs.
 
-  %
-  % \begin{table}
-  %   \small
-  %   \caption{ DEAP GA EvoWorker Parameters }
-  %   \label{tab:GAparams}
-  %   \centering
-  %   \small
-  %   \begin{tabular}{|l|c|}
-  %     \hline
-  %     Selection & Tournament size=12\\ \hline
-  %     Mutation & Gaussian $\mu=0.0$, $\sigma=0.5$, indbp=0.05  \\ \hline
-  %     Mutation Probability & [.1,.6]  \\ \hline
-  %     Crossover & Two Point  \\ \hline
-  %     Crossover Probability& [.8,1]  \\ \hline
-  %   \end{tabular}
-  % \end{table}
-  %
-  %
   \begin{figure*}[h!tb]
   \begin{tabular}{l@{\hspace*{-0.025\textwidth}}l@{\hspace*{-0.025\textwidth}}l@{\hspace*{-0.025\textwidth}}l}
   \includegraphics[width=0.266\textwidth]{ppfigdim_f001}&
@@ -653,7 +624,8 @@ services, in fact {\em microservices} \cite{microservices}, which in
   The results of the comparison are shown in Figure \ref{fig:aRTgraphs},
   which follow the classical BBOB 2009 format, which includes the amount
   of effort devoted to finding a certain fitness level and time needed
-  to do it. The EvoSpace and KafkEO results are shown side by side, only
+  to do it. Figure \ref{fig:aRTgraphs} was generated by the postprocessing script from COCO \cite{hansen2016coco} used in the Black-box Optimization Benchmarking workshop series.   
+  The EvoSpace and KafkEO results are shown side by side, only
   for the sake of comparison, since we are only interested for the time
   being in the baseline performance of the proof of concept.
 
@@ -677,8 +649,8 @@ The results obtained show that the basic Genetic Algorithm implemented
   work.
 
 
-  \section{Conclusions}
-  \label{sec:con}
+ \section{Conclusions}
+ \label{sec:con}
 
   This paper is intended to introduce a simple proof of concept of a
   serverless implementation of an evolutionary algorithm. The main
@@ -729,14 +701,9 @@ The results obtained show that the basic Genetic Algorithm implemented
   algorithm parameters, with the purpose of reducing the number of
   parameters to set at the start.
 
-  % On the implementation side, we will work on the automatic deployment
-  % of this architecture to any free or vendor serverless implementation,
-  % including maybe abstraction layers such as the {\tt serverless}
-  % library.
-
 \section*{Acknowledgments}
 
-  This paper has been supported in part by
+ Supported by
 projects TIN2014-56494-C4-3-P (Spanish Ministry of Economy and
 Competitiveness) and DeepBio (TIN2017-85727-C4-2-P)
 
